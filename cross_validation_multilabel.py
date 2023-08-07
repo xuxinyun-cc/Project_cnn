@@ -102,13 +102,13 @@ for fold_i, (train_ids,val_ids) in enumerate(kfold.split(x_train)):
 
     model.add(Flatten())
 
-    model.add(Dense(9, activation='softmax'))
+    model.add(Dense(9, activation='sigmoid'))
 
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     # model.summary()
 
-    model.fit(x_train[train_ids], y_train[train_ids], batch_size=128, epochs=10, validation_data=(x_train[val_ids],y_train[val_ids]))
+    model.fit(x_train[train_ids], y_train[train_ids], batch_size=64, epochs=10, validation_data=(x_train[val_ids],y_train[val_ids]))
 
 
     predictions = model.predict(x_test)

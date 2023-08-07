@@ -76,61 +76,39 @@ for i in range(num):
     if k == 9:
         ans.append('None')
 
+## Load a convolutional base with pre-trained weights
 
-from sklearn.model_selection import KFold
-kfold = KFold(n_splits = 5)
+base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
 
-fold_loss = []
-fold_accuracy = []
+# Freeze the base model
+for layer in base_model.layers:
+    layer.trainable = False
 
-for fold_i, (train_ids,val_ids) in enumerate(kfold.split(x_train)):
-    print(f'train size:{len(train_ids)}, val size:{len(val_ids)}')
+base_model.trainable = False
 
-    ## Load a convolutional base with pre-trained weights
+model = Sequential()
 
-    base_model = VGG16(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+model.add(base_model)
 
-    # Freeze the base model
-    for layer in base_model.layers:
-        layer.trainable = False
+model.add(Flatten())
 
-    base_model.trainable = False
+model.add(Dense(9, activation='sigmoid'))
 
-    model = Sequential()
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    model.add(base_model)
+model.summary()
 
-    model.add(Flatten())
-
-    model.add(Dense(9, activation='softmax'))
-
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-
-    # model.summary()
-
-    model.fit(x_train[train_ids], y_train[train_ids], batch_size=128, epochs=10, validation_data=(x_train[val_ids],y_train[val_ids]))
+model.fit(x_train, y_train, validation_split=0.2, batch_size=64, epochs=10)
 
 
-    predictions = model.predict(x_test)
-    # print(predictions)
-    test_pred = np.argmax(predictions, axis=1)
-    # print(test_pred)
-    predicted_val = []
-    for i in test_pred:
-        predicted_val.append(labels[i])
-    # print(predicted_val)
-    eval = model.evaluate(x_test, y_test)
-    fold_loss.append(eval[0])
-    fold_accuracy.append(eval[1])
-    print(f'Fold_{fold_i}')
-    print("loss:", eval[0])
-    print('accuracy:', eval[1])
-
-    # df = pd.DataFrame({'id':name, 'predict_label':predicted_val, 'true_label':ans})
-    # print(df)
-    # df.to_csv("1084_test.csv", index=False)
-
-print("loss:",fold_loss)
-# print("loss_mean:",fold_loss.mean())
-print("accuracy:",fold_accuracy)
-# print("accuracy_mean:",fold_accuracy.mean())
+predictions = model.predict(x_test)
+# print(predictions)
+test_pred = np.argmax(predictions, axis=1)
+# print(test_pred)
+predicted_val = []
+for i in test_pred:
+    predicted_val.append(labels[i])
+# print(predicted_val)
+eval = model.evaluate(x_test, y_test)
+print("loss:", eval[0])
+print('accuracy:', eval[1])
