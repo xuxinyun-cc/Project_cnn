@@ -1,8 +1,47 @@
 import os
 import numpy as np
+import pandas as pd
 ## y_train (答案)
 
 labels = ['RoT', 'vertical', 'horizontal', 'diagonal', 'curved', 'triangle', 'center', 'symmetric', 'pattern']
+
+trainpath = 'KU_PCP_dataset/train_label.txt'
+train = np.loadtxt(trainpath, delimiter=' ')
+train_ans = []
+num,classnum = train.shape
+# for i in range(num):
+#     k = 0
+#     for j in range(classnum):
+#         if train[i][j] == 1:
+#             train_ans.append(labels[j])
+#             break
+#         else:
+#             k += 1
+#     if k == 9:
+#         train_ans.append('None')
+# print(train_ans)
+print(train)
+
+# filepath = 'KU_PCP_dataset/test_label.txt'
+# test = np.loadtxt(filepath, delimiter=' ')
+# test_ans = []
+# num,classnum = test.shape
+# for i in range(num):
+#     k = 0
+#     for j in range(classnum):
+#         if test[i][j] == 1:
+#             test_ans.append(labels[j])
+#             break
+#         else:
+#             k += 1
+#     if k == 9:
+#         test_ans.append('None')
+# # # print(test_ans)
+
+# df = pd.DataFrame({'train_label':test_ans})
+# # print(df)
+# df.to_csv("data_test.csv", index=False)
+
 
 # filepath = 'KU_PCP_dataset/test_label.txt'
 # filepath = '100_test_label.txt'
@@ -56,21 +95,21 @@ labels = ['RoT', 'vertical', 'horizontal', 'diagonal', 'curved', 'triangle', 'ce
 
 
 # imgpath = '100_test_image/'
-imgpath = 'KU_PCP_dataset/test_img/'
+# imgpath = 'KU_PCP_dataset/test_img/'
 
 # image_shape = (100,1024,720,3)
 # img_data = np.empty(image_shape)
 # i = 0
-img = []
-for image in os.listdir(imgpath):
-    img.append(image.split('.')[0])
+# img = []
+# for image in os.listdir(imgpath):
+#     img.append(image.split('.')[0])
     # img = load_img(imgpath + image)
     # img = img.resize((720, 1024))
     # x = np.array(img)
     # img_data[i] = x
     # i += 1
-print(img)
-print(len(img))
+# print(img)
+# print(len(img))
 
 # img_data = img_data / 255
 # print(img_data)
